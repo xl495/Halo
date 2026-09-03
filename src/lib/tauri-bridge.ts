@@ -2,10 +2,11 @@ import { LogicalSize } from "@tauri-apps/api/dpi";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import type { HaloDesktopApi } from "@/lib/desktop";
+import { desktopView } from "@/lib/desktop";
 
 function widgetSize(shape = "ring", size = 236) {
-  const padX = 28;
-  const padY = 56;
+  const padX = 8;
+  const padY = 44;
   if (shape === "pill") {
     return {
       width: Math.round(size * 1.32) + padX,
@@ -19,7 +20,7 @@ function widgetSize(shape = "ring", size = 236) {
     };
   }
   if (shape === "minimal") {
-    return { width: Math.round(size * 1.15) + padX, height: 88 + padY };
+    return { width: Math.round(size * 1.15) + padX, height: 72 + padY };
   }
   return { width: size + padX, height: size + padY };
 }
@@ -62,9 +63,13 @@ export async function installHaloDesktop() {
     resizeWidget: async (info) => {
       const win = await WebviewWindow.getByLabel("widget");
       const next = widgetSize(info.shape, info.size);
+      await win?.setShadow(false);
       await win?.setSize(new LogicalSize(next.width, next.height));
     },
   };
 
   window.haloDesktop = api;
+  if (desktopView() === "widget") {
+    void getCurrentWindow().setShadow(false);
+  }
 }

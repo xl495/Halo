@@ -358,12 +358,14 @@
   display: grid;
   place-items: center;
   container-type: size;
+  border-radius: 50%;
+  overflow: hidden;
 }
 
 .halo-ring-svg {
   position: absolute;
   inset: 0;
-  overflow: visible;
+  overflow: hidden;
 }
 
 .halo-ring-inner {
@@ -375,9 +377,6 @@
   border-radius: 999px;
   background:
     radial-gradient(circle at 40% 28%, var(--halo-face-top), var(--halo-face) 62%);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.08),
-    0 0 0 1px rgb(0 0 0 / 0.35);
 }
 
 .halo-face {
@@ -1113,6 +1112,28 @@ body.halo-native-settings,
   top: auto;
   cursor: grab;
   width: fit-content;
+}
+
+html.halo-native .halo-face-glass.halo-ring-inner,
+html.halo-native .halo-pill.halo-face-glass,
+html.halo-native .halo-card-face.halo-face-glass,
+html.halo-native [data-halo-glass="true"] .halo-ring-inner,
+html.halo-native [data-halo-glass="true"] .halo-pill,
+html.halo-native [data-halo-glass="true"] .halo-card-face,
+html.halo-native .halo-ctrl {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+html.halo-native .halo-ring,
+html.halo-native .halo-pill,
+html.halo-native .halo-card-face,
+html.halo-native .halo-minimal,
+html.halo-native .halo-float,
+html.halo-native .halo-ring-inner {
+  filter: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
 }
 
 .halo-float-desktop:active {

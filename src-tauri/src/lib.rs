@@ -21,39 +21,38 @@ fn show_widget(app: &tauri::AppHandle) {
 
 fn clear_widget_background(app: &tauri::AppHandle) {
     if let Some(widget) = app.get_webview_window("widget") {
+        let _ = widget.set_shadow(false);
         let _ = widget.set_background_color(Some(tauri::window::Color(0, 0, 0, 0)));
         #[cfg(target_os = "macos")]
         macos_clear_window(&widget);
-        #[cfg(windows)]
-        {
-            let _ = window_vibrancy::apply_acrylic(&widget, Some((0, 0, 0, 0)))
-                .or_else(|_| window_vibrancy::apply_blur(&widget, Some((0, 0, 0, 0))));
-        }
     }
 }
 
 #[cfg(target_os = "macos")]
 fn macos_clear_window(window: &tauri::WebviewWindow) {
-    use objc::runtime::{Object, BOOL, NO, YES};
+    use objc::runtime::{Object, NO, YES};
     use objc::{class, msg_send, sel, sel_impl};
 
     unsafe {
-        let Ok(ns_window) = window.ns_window() else { return };
+        let Ok(ns_window) = window.ns_window() else {
+            return;
+        };
         let ns_window = ns_window as *mut Object;
         let clear: *mut Object = msg_send![class!(NSColor), clearColor];
-        let no: BOOL = NO;
-        let yes: BOOL = YES;
-        let _: () = msg_send![ns_window, setOpaque: no];
+        let _: () = msg_send![ns_window, setOpaque: NO];
         let _: () = msg_send![ns_window, setBackgroundColor: clear];
-        let _: () = msg_send![ns_window, setHasShadow: no];
+        let _: () = msg_send![ns_window, setHasShadow: NO];
+        let _: () = msg_send![ns_window, invalidateShadow];
 
-        let Ok(ns_view) = window.ns_view() else { return };
-        clear_nsview(ns_view as *mut Object, clear, yes, no);
+        let Ok(ns_view) = window.ns_view() else {
+            return;
+        };
+        clear_wkwebview(ns_view as *mut Object, clear, YES, NO);
     }
 }
 
 #[cfg(target_os = "macos")]
-unsafe fn clear_nsview(
+unsafe fn clear_wkwebview(
     view: *mut objc::runtime::Object,
     clear: *mut objc::runtime::Object,
     yes: objc::runtime::BOOL,
@@ -67,15 +66,6 @@ unsafe fn clear_nsview(
         return;
     }
 
-    let _: () = msg_send![view, setWantsLayer: yes];
-    let _: () = msg_send![view, setOpaque: no];
-    let layer: *mut Object = msg_send![view, layer];
-    if !layer.is_null() {
-        let cg: *mut Object = msg_send![clear, CGColor];
-        let _: () = msg_send![layer, setOpaque: no];
-        let _: () = msg_send![layer, setBackgroundColor: cg];
-    }
-
     let wk: BOOL = msg_send![view, isKindOfClass: class!(WKWebView)];
     if wk == yes {
         let key = CString::new("drawsBackground").unwrap();
@@ -84,6 +74,7 @@ unsafe fn clear_nsview(
         let num: *mut Object = msg_send![class!(NSNumber), numberWithBool: no];
         let _: () = msg_send![view, setValue: num forKey: ns_key];
         let _: () = msg_send![view, setUnderPageBackgroundColor: clear];
+        return;
     }
 
     let subviews: *mut Object = msg_send![view, subviews];
@@ -93,7 +84,7 @@ unsafe fn clear_nsview(
     let count: usize = msg_send![subviews, count];
     for i in 0..count {
         let sub: *mut Object = msg_send![subviews, objectAtIndex: i];
-        clear_nsview(sub, clear, yes, no);
+        clear_wkwebview(sub, clear, yes, no);
     }
 }
 
@@ -101,12 +92,21 @@ unsafe fn clear_nsview(
 pub fn run() {
     tauri::Builder::default()
         .setup(|app| {
-            let handle = app.handle();
-            clear_widget_background(handle);
-            let settings_item = MenuItem::with_id(handle, "settings", "设置", true, None::<&str>)?;
-            let show_item = MenuItem::with_id(handle, "show", "显示计时器", true, None::<&str>)?;
-            let quit_item = MenuItem::with_id(handle, "quit", "退出", true, None::<&str>)?;
-            let menu = Menu::with_items(handle, &[&settings_item, &show_item, &quit_item])?;
+            let handle = app.handle().clone();
+            clear_widget_background(&handle);
+            let delayed = handle.clone();
+            std::thread::spawn(move || {
+                std::thread::sleep(std::time::Duration::from_millis(400));
+                let again = delayed.clone();
+                let _ = delayed.run_on_main_thread(move || {
+                    clear_widget_background(&again);
+                });
+            });
+
+            let settings_item = MenuItem::with_id(&handle, "settings", "设置", true, None::<&str>)?;
+            let show_item = MenuItem::with_id(&handle, "show", "显示计时器", true, None::<&str>)?;
+            let quit_item = MenuItem::with_id(&handle, "quit", "退出", true, None::<&str>)?;
+            let menu = Menu::with_items(&handle, &[&settings_item, &show_item, &quit_item])?;
 
             let mut tray = TrayIconBuilder::new()
                 .menu(&menu)
@@ -132,7 +132,7 @@ pub fn run() {
                 tray = tray.icon(icon);
             }
 
-            tray.build(handle)?;
+            tray.build(&handle)?;
             Ok(())
         })
         .on_window_event(|window, event| {
@@ -140,6 +140,14 @@ pub fn run() {
                 if let WindowEvent::CloseRequested { api, .. } = event {
                     api.prevent_close();
                     let _ = window.hide();
+                }
+            }
+            if window.label() == "widget" {
+                match event {
+                    WindowEvent::Resized(_) | WindowEvent::ScaleFactorChanged { .. } => {
+                        clear_widget_background(window.app_handle());
+                    }
+                    _ => {}
                 }
             }
         })
