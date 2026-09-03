@@ -1,0 +1,1059 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Noto Sans SC", "Sora", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Sora", "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
+
+  --color-bg: #07110f;
+  --color-bg-elevated: #0e1a18;
+  --color-bg-subtle: #152421;
+  --color-fg: #e8f2ef;
+  --color-fg-muted: #8aa39c;
+  --color-fg-subtle: #5c736d;
+  --color-primary: #1ad4b0;
+  --color-primary-fg: #04211b;
+  --color-border: #243734;
+  --color-danger: #e07068;
+  --color-menubar: rgb(8 14 13 / 0.72);
+  --color-dock: rgb(12 20 18 / 0.55);
+
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+
+  --shadow-border: 0 0 0 1px rgb(255 255 255 / 0.08);
+  --shadow-window:
+    0 0 0 1px rgb(255 255 255 / 0.08),
+    0 24px 60px rgb(0 0 0 / 0.45);
+}
+
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: var(--color-bg);
+    color: var(--color-fg);
+  }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    font-family: var(--font-sans);
+    background: var(--color-bg);
+    color: var(--color-fg);
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+}
+
+/* ---------- Themes (widget only) ---------- */
+
+[data-halo-theme="aurora"] {
+  --halo-ring-from: #2ee6c6;
+  --halo-ring-to: #8dff6e;
+  --halo-track: rgb(255 255 255 / 0.08);
+  --halo-face: #071614;
+  --halo-face-top: #10302b;
+  --halo-time: #f3fffb;
+  --halo-label: #7aa8a0;
+  --halo-glow: rgb(46 230 198 / 0.45);
+}
+
+[data-halo-theme="ice"] {
+  --halo-ring-from: #9ae6ff;
+  --halo-ring-to: #e8f7ff;
+  --halo-track: rgb(255 255 255 / 0.1);
+  --halo-face: #07151c;
+  --halo-face-top: #123040;
+  --halo-time: #f4fbff;
+  --halo-label: #8ab4c4;
+  --halo-glow: rgb(154 230 255 / 0.4);
+}
+
+[data-halo-theme="ember"] {
+  --halo-ring-from: #ff7a59;
+  --halo-ring-to: #ffc4a8;
+  --halo-track: rgb(255 255 255 / 0.08);
+  --halo-face: #1a0e0b;
+  --halo-face-top: #3a1c14;
+  --halo-time: #fff6f1;
+  --halo-label: #c49a8c;
+  --halo-glow: rgb(255 122 89 / 0.4);
+}
+
+[data-halo-theme="ink"] {
+  --halo-ring-from: #f4f4f5;
+  --halo-ring-to: #a1a1aa;
+  --halo-track: rgb(255 255 255 / 0.08);
+  --halo-face: #0c0c0e;
+  --halo-face-top: #1c1c20;
+  --halo-time: #fafafa;
+  --halo-label: #a1a1aa;
+  --halo-glow: rgb(244 244 245 / 0.28);
+}
+
+[data-halo-theme="tide"] {
+  --halo-ring-from: #3aa0ff;
+  --halo-ring-to: #5eead4;
+  --halo-track: rgb(255 255 255 / 0.08);
+  --halo-face: #071018;
+  --halo-face-top: #123044;
+  --halo-time: #f3fbff;
+  --halo-label: #7ea8c0;
+  --halo-glow: rgb(58 160 255 / 0.4);
+}
+
+[data-halo-theme="moss"] {
+  --halo-ring-from: #3dd68c;
+  --halo-ring-to: #c6f06a;
+  --halo-track: rgb(255 255 255 / 0.08);
+  --halo-face: #0a140c;
+  --halo-face-top: #1a3020;
+  --halo-time: #f4fff4;
+  --halo-label: #8aaa88;
+  --halo-glow: rgb(61 214 140 / 0.4);
+}
+
+/* ---------- Desktop ---------- */
+
+.halo-desktop {
+  position: relative;
+  min-height: 100dvh;
+  overflow: hidden;
+  color: var(--color-fg);
+  background: var(--color-bg);
+}
+
+.halo-wallpaper {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.halo-wallpaper-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  outline: none;
+}
+
+.halo-grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.07;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+}
+
+.halo-stage {
+  position: relative;
+  z-index: 2;
+  min-height: 100dvh;
+}
+
+.halo-menubar {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 32px;
+  padding: 0 12px;
+  font-size: 12px;
+  letter-spacing: 0.01em;
+  color: var(--color-fg);
+  background: var(--color-menubar);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.06);
+}
+
+.halo-menubar-left,
+.halo-menubar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.halo-menu-strong {
+  font-weight: 600;
+  background: none;
+  border: 0;
+  color: inherit;
+  padding: 0;
+}
+
+.halo-menu-item {
+  background: none;
+  border: 0;
+  color: inherit;
+  padding: 0;
+  opacity: 0.82;
+  font-size: 12px;
+}
+
+.halo-menu-item:hover,
+.halo-menu-strong:hover {
+  opacity: 1;
+}
+
+.halo-dock {
+  position: absolute;
+  z-index: 25;
+  left: 50%;
+  bottom: 12px;
+  display: flex;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 20px;
+  background: var(--color-dock);
+  backdrop-filter: blur(22px);
+  box-shadow: var(--shadow-window);
+  transform: translateX(-50%);
+}
+
+.halo-dock-item {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 12px;
+  background: rgb(255 255 255 / 0.08);
+  color: var(--color-primary);
+}
+
+.halo-dock-item.is-live {
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.12);
+}
+
+.halo-dock-gear {
+  width: 18px;
+  height: 18px;
+  border: 2px solid currentColor;
+  border-radius: 5px;
+  position: relative;
+}
+
+.halo-dock-gear::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: 999px;
+  border: 2px solid currentColor;
+}
+
+.halo-taskbar {
+  position: absolute;
+  z-index: 25;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+  padding: 0 10px;
+  border-radius: 14px;
+  background: rgb(12 18 28 / 0.72);
+  backdrop-filter: blur(22px);
+  box-shadow: var(--shadow-window);
+}
+
+.halo-taskbar-cluster,
+.halo-taskbar-tray {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.halo-taskbar-start,
+.halo-taskbar-pin {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 10px;
+  background: rgb(255 255 255 / 0.06);
+  color: var(--color-primary);
+}
+
+.halo-taskbar-pin.is-live {
+  background: rgb(255 255 255 / 0.1);
+}
+
+.halo-taskbar-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.08);
+  color: var(--color-fg-muted);
+  font-size: 12px;
+  min-width: 160px;
+}
+
+.halo-exit-focus {
+  position: absolute;
+  z-index: 30;
+  top: 16px;
+  right: 16px;
+  height: 36px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: rgb(8 16 14 / 0.7);
+  color: var(--color-fg);
+  font-size: 12px;
+  box-shadow: var(--shadow-border);
+  backdrop-filter: blur(12px);
+}
+
+/* ---------- Floating widget ---------- */
+
+.halo-float {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  touch-action: none;
+  user-select: none;
+  cursor: grab;
+}
+
+.halo-float:active {
+  cursor: grabbing;
+}
+
+.halo-float-preview {
+  position: relative;
+  left: auto;
+  top: auto;
+  cursor: default;
+}
+
+.halo-ring {
+  position: relative;
+  display: grid;
+  place-items: center;
+  container-type: size;
+  filter:
+    drop-shadow(0 12px 24px rgb(0 0 0 / 0.45))
+    drop-shadow(0 0 16px var(--halo-glow));
+}
+
+.halo-ring-svg {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+}
+
+.halo-ring-inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 40% 28%, var(--halo-face-top), var(--halo-face) 62%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.08),
+    0 0 0 1px rgb(0 0 0 / 0.35);
+}
+
+.halo-face {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  max-width: 100%;
+  padding: 0 8%;
+  color: var(--halo-time);
+}
+
+.halo-face-glass.halo-ring-inner,
+.halo-pill.halo-face-glass,
+.halo-card-face.halo-face-glass,
+[data-halo-glass="true"] .halo-ring-inner,
+[data-halo-glass="true"] .halo-pill,
+[data-halo-glass="true"] .halo-card-face {
+  background: color-mix(in oklab, var(--halo-face) 62%, transparent);
+  backdrop-filter: blur(18px);
+}
+
+.halo-time {
+  max-width: 100%;
+  overflow: hidden;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.halo-tick-row {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 1.08em;
+}
+
+.halo-tick {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 0.62em;
+  height: 1.08em;
+  overflow: hidden;
+}
+
+.halo-tick.is-colon {
+  width: 0.32em;
+}
+
+.halo-time.is-long .halo-tick {
+  width: 0.56em;
+}
+
+.halo-time.is-long .halo-tick.is-colon,
+.halo-big-time.is-long .halo-tick.is-colon,
+.halo-big-time.is-very-long .halo-tick.is-colon {
+  width: 0.28em;
+}
+
+.halo-big-time.is-long .halo-tick {
+  width: 0.56em;
+}
+
+.halo-big-time.is-very-long .halo-tick {
+  width: 0.5em;
+}
+
+.halo-tick-now,
+.halo-tick-out,
+.halo-tick-in {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.halo-tick-out,
+.halo-tick-in {
+  position: absolute;
+  inset: 0;
+}
+
+.halo-tick-out {
+  animation: halo-tick-out 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.halo-tick-in {
+  animation: halo-tick-in 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes halo-tick-out {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-115%);
+    opacity: 0;
+  }
+}
+
+@keyframes halo-tick-in {
+  from {
+    transform: translateY(115%);
+    opacity: 0.4;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.halo-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--halo-label);
+}
+
+.halo-pill,
+.halo-card-face {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--halo-face);
+  box-shadow: var(--shadow-window);
+}
+
+.halo-pill {
+  border-radius: 999px;
+  padding: 12px 28px 16px;
+}
+
+.halo-pill-bar {
+  position: absolute;
+  left: 18px;
+  bottom: 10px;
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--halo-ring-from), var(--halo-ring-to));
+  box-shadow: 0 0 10px var(--halo-glow);
+}
+
+.halo-card-face {
+  border-radius: var(--radius-xl);
+  padding: 18px 20px 16px;
+  gap: 10px;
+}
+
+.halo-card-track {
+  display: block;
+  width: 78%;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--halo-track);
+  overflow: hidden;
+}
+
+.halo-card-bar {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--halo-ring-from), var(--halo-ring-to));
+}
+
+.halo-minimal .halo-time {
+  text-shadow: 0 10px 30px rgb(0 0 0 / 0.55), 0 0 24px var(--halo-glow);
+}
+
+.halo-minimal .halo-label {
+  text-shadow: 0 4px 12px rgb(0 0 0 / 0.5);
+}
+
+.halo-controls {
+  display: flex;
+  gap: 8px;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition:
+    opacity 150ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 150ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.halo-float:hover .halo-controls,
+.halo-float:focus-within .halo-controls {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.halo-ctrl {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 999px;
+  color: var(--color-fg);
+  background: rgb(8 16 14 / 0.72);
+  box-shadow: var(--shadow-border);
+  backdrop-filter: blur(10px);
+}
+
+.halo-ctrl svg {
+  width: 14px;
+  height: 14px;
+}
+
+.halo-float-done .halo-ring-inner {
+  animation: halo-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes halo-pulse {
+  50% {
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.1),
+      0 0 28px var(--halo-glow);
+  }
+}
+
+/* ---------- Settings window ---------- */
+
+.halo-settings {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  width: min(440px, calc(100vw - 24px));
+  max-height: calc(100dvh - 124px);
+  border-radius: var(--radius-xl);
+  background: var(--color-bg-elevated);
+  box-shadow: var(--shadow-window);
+  overflow: hidden;
+  color: var(--color-fg);
+}
+
+.halo-settings-bar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  height: 40px;
+  padding: 0 12px;
+  flex-shrink: 0;
+  background: var(--color-bg-subtle);
+  border-bottom: 1px solid rgb(255 255 255 / 0.06);
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
+
+.halo-settings-bar:active {
+  cursor: grabbing;
+}
+
+.halo-traffic {
+  display: flex;
+  gap: 6px;
+}
+
+.halo-traffic-btn {
+  width: 12px;
+  height: 12px;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+}
+
+.halo-traffic-close {
+  background: #e07068;
+}
+
+.halo-traffic-min {
+  background: #c9a227;
+}
+
+.halo-traffic-max {
+  background: #3fa66b;
+}
+
+.halo-settings-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-fg-muted);
+}
+
+.halo-win-mark {
+  display: grid;
+  place-items: center;
+  color: var(--color-primary);
+}
+
+.halo-settings-x {
+  justify-self: end;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--color-fg-muted);
+}
+
+.halo-settings-x:hover {
+  background: var(--color-bg);
+}
+
+.halo-settings-body {
+  display: grid;
+  grid-template-columns: 108px 1fr;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.halo-settings-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 8px;
+  border-right: 1px solid rgb(255 255 255 / 0.06);
+}
+
+.halo-nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--color-fg-muted);
+  font-size: 12px;
+  text-align: left;
+}
+
+.halo-nav-btn-active,
+.halo-nav-btn:hover {
+  background: var(--color-bg-subtle);
+  color: var(--color-fg);
+}
+
+.halo-settings-content {
+  overflow: auto;
+  padding: 16px 18px 20px;
+}
+
+.halo-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.halo-big-time {
+  display: flex;
+  justify-content: center;
+  font-size: 2.1rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+.halo-big-time.is-long {
+  font-size: 1.45rem;
+  letter-spacing: -0.05em;
+}
+
+.halo-big-time.is-very-long {
+  font-size: 1.2rem;
+  letter-spacing: -0.06em;
+}
+
+.halo-big-sub {
+  margin-top: -6px;
+  font-size: 12px;
+  color: var(--color-fg-muted);
+}
+
+.halo-row {
+  display: flex;
+  gap: 8px;
+}
+
+.halo-row-top {
+  flex-wrap: wrap;
+}
+
+.halo-row .flex-1,
+.halo-row input {
+  flex: 1;
+}
+
+.halo-preset-grid,
+.halo-shape-grid,
+.halo-theme-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.halo-preset-grid {
+  grid-template-columns: 1fr 1fr;
+}
+
+.halo-chip {
+  height: 36px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--color-bg-subtle);
+  color: var(--color-fg);
+  font-size: 12px;
+  box-shadow: var(--shadow-border);
+}
+
+.halo-chip:hover {
+  background: color-mix(in oklab, var(--color-bg-subtle) 70%, white);
+}
+
+.halo-duration {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+}
+
+.halo-num {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--color-fg-muted);
+}
+
+.halo-hint {
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--color-fg-subtle);
+}
+
+.halo-shape-grid {
+  grid-template-columns: 1fr 1fr;
+}
+
+.halo-shape-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 88px;
+  padding: 10px 8px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--color-bg);
+  color: var(--color-fg-muted);
+  font-size: 11px;
+  box-shadow: var(--shadow-border);
+}
+
+.halo-shape-card.is-active {
+  color: var(--color-fg);
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--color-primary) 55%, transparent);
+}
+
+.halo-shape-icon {
+  display: block;
+  width: 42px;
+  height: 42px;
+  margin-bottom: 2px;
+}
+
+.halo-shape-icon.is-ring {
+  border-radius: 999px;
+  background:
+    conic-gradient(from 200deg, var(--halo-ring-from), var(--halo-ring-to) 70%, transparent 75%);
+  mask: radial-gradient(circle, transparent 12px, black 13px);
+}
+
+.halo-shape-icon.is-pill {
+  width: 52px;
+  height: 22px;
+  margin-top: 10px;
+  margin-bottom: 12px;
+  border-radius: 999px;
+  background: var(--halo-face);
+  box-shadow: inset 0 0 0 2px var(--halo-ring-from);
+}
+
+.halo-shape-icon.is-minimal {
+  width: auto;
+  height: 42px;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 42px;
+  letter-spacing: -0.04em;
+  color: var(--halo-time);
+}
+
+.halo-shape-icon.is-minimal::after {
+  content: "12:00";
+}
+
+.halo-shape-icon.is-card {
+  width: 38px;
+  height: 30px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+  border-radius: 8px;
+  background: var(--halo-face);
+  box-shadow: inset 0 0 0 2px var(--halo-ring-from);
+}
+
+.halo-theme-grid {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.halo-theme-swatch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 6px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--color-bg);
+  color: var(--color-fg-muted);
+  font-size: 11px;
+  box-shadow: var(--shadow-border);
+}
+
+.halo-theme-swatch.is-active {
+  color: var(--color-fg);
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--color-primary) 55%, transparent);
+}
+
+.halo-theme-ring {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: conic-gradient(var(--halo-ring-from), var(--halo-ring-to), var(--halo-ring-from));
+  mask: radial-gradient(circle, transparent 8px, black 9px);
+}
+
+.halo-slider-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.halo-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 44px;
+  font-size: 13px;
+}
+
+.halo-seg {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 3px;
+  border-radius: 12px;
+  background: var(--color-bg);
+  box-shadow: var(--shadow-border);
+}
+
+.halo-seg-btn {
+  height: 34px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--color-fg-muted);
+  font-size: 12px;
+}
+
+.halo-seg-btn.is-active {
+  background: var(--color-bg-subtle);
+  color: var(--color-fg);
+}
+
+.halo-about {
+  align-items: flex-start;
+  padding-top: 8px;
+}
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 720px) {
+  .halo-desktop {
+    overflow: auto;
+  }
+
+  .halo-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 56px 12px 96px;
+    min-height: 100dvh;
+  }
+
+  .halo-float,
+  .halo-settings {
+    position: relative;
+    left: auto !important;
+    top: auto !important;
+    z-index: 3 !important;
+  }
+
+  .halo-settings {
+    width: 100%;
+    max-height: none;
+  }
+
+  .halo-settings-body {
+    grid-template-columns: 1fr;
+    max-height: none;
+    min-height: 0;
+  }
+
+  .halo-settings-nav {
+    flex-direction: row;
+    overflow-x: auto;
+    border-right: 0;
+    border-bottom: 1px solid rgb(255 255 255 / 0.06);
+  }
+
+  .halo-nav-btn {
+    flex: 1;
+    justify-content: center;
+    min-width: 72px;
+  }
+
+  .halo-dock {
+    display: none;
+  }
+
+  .halo-taskbar-search span {
+    display: none;
+  }
+
+  .halo-taskbar-search {
+    min-width: 40px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .halo-controls {
+    opacity: 1;
+    transform: none;
+  }
+
+  .halo-menubar-left .halo-menu-item {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .halo-controls,
+  .halo-float-done .halo-ring-inner,
+  .halo-ctrl,
+  .halo-tick-out,
+  .halo-tick-in {
+    transition: none;
+    animation: none;
+  }
+}

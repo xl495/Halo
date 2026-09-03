@@ -1,0 +1,40 @@
+{
+  "url": "http://127.0.0.1:8081/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Halo",
+      "hasCanvas": false,
+      "bodyTextLen": 173,
+      "bodyTextHash": "673516e2a51ea902848064e62c7555ef1227ba0b9ea9353080c80dcc242dba52",
+      "bodyTextPrefix": "Halo 倒计时 显示 Windows EN 07:30 16:31 倒计时中 设置 倒计时 外观 显示 关于 16:31 总计",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Halo",
+      "hasCanvas": false,
+      "bodyTextLen": 166,
+      "bodyTextHash": "469eb17169728c580b0861645d1598820b59c61a359afde3ee7013e0f1649ada",
+      "bodyTextPrefix": "Halo Windows EN 07:30 16:32 倒计时中 设置 倒计时 外观 显示 关于 16:32 总计 · 25:0",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-built.json",
+  "divergesFromBaseline": true,
+  "baselineReasons": [
+    "mobile: body text replaced (similar length, page start changed)"
+  ]
+}
