@@ -7,7 +7,7 @@ mkdirSync(outDir, { recursive: true });
 
 const svg = readFileSync(path.resolve("public/favicon.svg"), "utf8");
 const resvg = new Resvg(svg, {
-  fitTo: { mode: "width", value: 512 },
+  fitTo: { mode: "width", value: 1024 },
   background: "#041512",
 });
 const png = resvg.render().asPng();

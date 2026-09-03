@@ -1,0 +1,64 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Halo",
+  "version": "1.0.1",
+  "identifier": "app.halo.timer",
+  "build": {
+    "frontendDist": "../desktop-dist",
+    "beforeBuildCommand": "npx vite build --config vite.desktop.config.ts"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "widget",
+        "title": "Halo",
+        "url": "desktop.html#widget",
+        "width": 284,
+        "height": 328,
+        "transparent": true,
+        "decorations": false,
+        "alwaysOnTop": true,
+        "shadow": false,
+        "resizable": false,
+        "skipTaskbar": true,
+        "visible": true
+      },
+      {
+        "label": "settings",
+        "title": "Halo",
+        "url": "desktop.html#settings",
+        "width": 420,
+        "height": 680,
+        "decorations": false,
+        "resizable": true,
+        "visible": true,
+        "backgroundColor": "#07110f"
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["dmg", "app", "nsis"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico",
+      "icons/icon.png"
+    ],
+    "category": "Productivity",
+    "shortDescription": "Floating countdown timer",
+    "macOS": {
+      "signingIdentity": "-"
+    },
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser"
+      }
+    }
+  }
+}

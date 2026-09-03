@@ -6,5 +6,6 @@ desktop-dist/
 release/
 dist/
 .output/
+src-tauri/target/
 *.log
 .DS_Store

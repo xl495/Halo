@@ -5,6 +5,7 @@ import { SettingsWindow } from "@/components/settings/settings-window";
 import { HaloWidget } from "@/components/widget/halo-widget";
 import { playChime } from "@/lib/chime";
 import { desktopView, isHaloDesktop } from "@/lib/desktop";
+import { installHaloDesktop } from "@/lib/tauri-bridge";
 import { t } from "@/lib/i18n";
 import { useHalo } from "@/store/halo";
 import "./styles.css";
@@ -112,8 +113,10 @@ function NativeApp() {
   );
 }
 
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <NativeApp />
-  </StrictMode>,
-);
+void installHaloDesktop().then(() => {
+  createRoot(document.getElementById("root")!).render(
+    <StrictMode>
+      <NativeApp />
+    </StrictMode>,
+  );
+});

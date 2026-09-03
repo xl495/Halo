@@ -111,6 +111,7 @@ export function HaloWidget({
       }
       data-halo-theme={themeId}
       data-halo-glass={glass ? "true" : "false"}
+      {...(desktop ? { "data-tauri-drag-region": true } : {})}
       onPointerDown={(e) => {
         if (!floating) return;
         setWidgetFocus(true);

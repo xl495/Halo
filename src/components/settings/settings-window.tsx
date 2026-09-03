@@ -76,6 +76,7 @@ export function SettingsWindow() {
         onPointerDown={page ? undefined : drag.onPointerDown}
         onPointerMove={page ? undefined : drag.onPointerMove}
         onPointerUp={page ? undefined : drag.onPointerUp}
+        {...(page ? { "data-tauri-drag-region": true } : {})}
       >
         {os === "mac" ? (
           <span className="halo-traffic">
