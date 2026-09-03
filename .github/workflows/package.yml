@@ -34,7 +34,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm install
-      - run: npm install --save-dev electron@35.7.5 electron-builder@26.0.12
+      - run: npm install --save-dev electron@35.7.5 electron-builder@26.0.12 @resvg/resvg-js
       - name: Rasterize icon
         run: node scripts/make-icon.mjs
       - run: npx vite build --config vite.desktop.config.ts
