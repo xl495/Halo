@@ -446,6 +446,10 @@
   width: 0.28em;
 }
 
+.halo-tick.is-plus {
+  width: 0.5em;
+}
+
 .halo-big-time.is-long .halo-tick {
   width: 0.56em;
 }
@@ -521,13 +525,24 @@
 
 .halo-pill {
   border-radius: 999px;
-  padding: 12px 28px 16px;
+  padding: 18px 34px 28px;
+}
+
+.halo-pill .halo-face {
+  gap: 10px;
+  padding: 4px 6px 12px;
+}
+
+.halo-pill .halo-label {
+  margin-top: 2px;
+  padding-bottom: 4px;
+  line-height: 1.35;
 }
 
 .halo-pill-bar {
   position: absolute;
-  left: 18px;
-  bottom: 10px;
+  left: 24px;
+  bottom: 16px;
   height: 3px;
   border-radius: 999px;
   background: linear-gradient(90deg, var(--halo-ring-from), var(--halo-ring-to));
@@ -604,6 +619,28 @@ html.halo-native:hover .halo-controls {
 
 .halo-float-done .halo-ring-inner {
   animation: halo-pulse 1.4s ease-in-out infinite;
+}
+
+.halo-float.is-urgent {
+  --halo-ring-from: #ffc15a;
+  --halo-ring-to: #ff6a4d;
+  --halo-glow: rgb(255 106 77 / 0.5);
+  --halo-time: #fff4ea;
+  --halo-label: #e2b199;
+}
+
+.halo-float.is-critical .halo-ring-inner,
+.halo-float.is-critical .halo-pill,
+.halo-float.is-critical .halo-card-face {
+  animation: halo-pulse 0.85s ease-in-out infinite;
+}
+
+.halo-float.is-overtime {
+  --halo-ring-from: #ff7b73;
+  --halo-ring-to: #ffd36a;
+  --halo-glow: rgb(255 123 115 / 0.45);
+  --halo-time: #ffe4df;
+  --halo-label: #e2a39d;
 }
 
 @keyframes halo-pulse {

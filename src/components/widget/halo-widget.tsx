@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { Pause, Play, RotateCcw, Settings2 } from "lucide-react";
 import { WidgetFace } from "@/components/widget/widget-face";
-import { t } from "@/lib/i18n";
-import { formatRemaining } from "@/lib/format-time";
+import { t, tRound } from "@/lib/i18n";
+import { formatOvertime, formatRemaining } from "@/lib/format-time";
 import { isHaloDesktop } from "@/lib/desktop";
 import { useDrag } from "@/lib/use-drag";
 import { cn } from "@/lib/utils";
@@ -29,10 +29,12 @@ export function HaloWidget({
   const showProgress = useHalo((s) => s.showProgress);
   const customLabel = useHalo((s) => s.label);
   const loop = useHalo((s) => s.loop);
+  const loopRound = useHalo((s) => s.loopRound);
   const status = useHalo((s) => s.status);
   const durationMs = useHalo((s) => s.durationMs);
   const remainingMs = useHalo((s) => s.remainingMs);
   const endsAt = useHalo((s) => s.endsAt);
+  const finishedAt = useHalo((s) => s.finishedAt);
   const widgetPos = useHalo((s) => s.widgetPos);
   const alwaysOnTop = useHalo((s) => s.alwaysOnTop);
   const widgetFocus = useHalo((s) => s.widgetFocus);
@@ -52,7 +54,7 @@ export function HaloWidget({
   const [fit, setFit] = useState(size);
 
   useEffect(() => {
-    if (status !== "running") return;
+    if (status !== "running" && status !== "done") return;
     const id = window.setInterval(() => setNow(Date.now()), 80);
     return () => window.clearInterval(id);
   }, [status]);
@@ -71,24 +73,36 @@ export function HaloWidget({
     return remainingMs;
   }, [status, endsAt, now, remainingMs]);
 
+  const overtimeMs =
+    status === "done" && finishedAt ? Math.max(0, now - finishedAt) : 0;
+
   useEffect(() => {
     if (status === "running" && remaining <= 0) finish();
   }, [status, remaining, finish]);
 
   const progress = durationMs > 0 ? remaining / durationMs : 0;
-  const timeText = formatRemaining(remaining, showSeconds);
+  const timeText =
+    status === "done"
+      ? formatOvertime(overtimeMs, showSeconds)
+      : formatRemaining(remaining, showSeconds);
   const statusLabel =
     customLabel.trim() ||
-    t(
-      lang,
-      status === "done"
-        ? "done"
-        : status === "paused"
-          ? "paused"
-          : loop
-            ? "looping"
-            : "counting",
-    );
+    (loop && status === "running" && loopRound > 0
+      ? tRound(lang, loopRound)
+      : t(
+          lang,
+          status === "done"
+            ? overtimeMs > 0
+              ? "overtime"
+              : "done"
+            : status === "paused"
+              ? "paused"
+              : loop
+                ? "looping"
+                : "counting",
+        ));
+  const urgent = status === "running" && remaining > 0 && remaining <= 60_000;
+  const critical = status === "running" && remaining > 0 && remaining <= 10_000;
 
   const drag = useDrag(widgetPos, setWidgetPos);
   const z = alwaysOnTop ? 50 : widgetFocus ? 40 : 24;
@@ -121,6 +135,9 @@ export function HaloWidget({
         desktop && "halo-float-desktop",
         hot && "is-hot",
         status === "done" && "halo-float-done",
+        urgent && "is-urgent",
+        critical && "is-critical",
+        status === "done" && "is-overtime",
       )}
       style={
         floating

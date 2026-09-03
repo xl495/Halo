@@ -79,6 +79,10 @@ export function DesktopShell() {
         else s.start();
       } else if (e.key === "r" || e.key === "R") {
         reset();
+      } else if (e.key === "=" || e.key === "+") {
+        useHalo.getState().nudge(60_000);
+      } else if (e.key === "-" || e.key === "_") {
+        useHalo.getState().nudge(-60_000);
       } else if (e.key === "s" || e.key === "S") {
         setFocusMode(false);
         setSettingsOpen(!useHalo.getState().settingsOpen);

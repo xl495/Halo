@@ -16,8 +16,8 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { playChime } from "@/lib/chime";
-import { formatRemaining } from "@/lib/format-time";
-import { t, type MsgKey } from "@/lib/i18n";
+import { formatOvertime, formatRemaining } from "@/lib/format-time";
+import { t, tRound, type MsgKey } from "@/lib/i18n";
 import { openHaloPip } from "@/lib/pip";
 import { isHaloDesktop } from "@/lib/desktop";
 import { PRESETS, SHAPES, THEMES } from "@/lib/themes";
@@ -143,9 +143,11 @@ function TimerPanel() {
   const durationMs = useHalo((s) => s.durationMs);
   const remainingMs = useHalo((s) => s.remainingMs);
   const endsAt = useHalo((s) => s.endsAt);
+  const finishedAt = useHalo((s) => s.finishedAt);
   const showSeconds = useHalo((s) => s.showSeconds);
   const customLabel = useHalo((s) => s.label);
   const loop = useHalo((s) => s.loop);
+  const loopRound = useHalo((s) => s.loopRound);
   const setLabel = useHalo((s) => s.setLabel);
   const setLoop = useHalo((s) => s.setLoop);
   const start = useHalo((s) => s.start);
@@ -153,6 +155,7 @@ function TimerPanel() {
   const resume = useHalo((s) => s.resume);
   const reset = useHalo((s) => s.reset);
   const again = useHalo((s) => s.again);
+  const nudge = useHalo((s) => s.nudge);
 
   const [now, setNow] = useState(() => Date.now());
   const [hours, setHours] = useState(0);
@@ -161,7 +164,7 @@ function TimerPanel() {
   const [until, setUntil] = useState("18:00");
 
   useEffect(() => {
-    if (status !== "running") return;
+    if (status !== "running" && status !== "done") return;
     const id = window.setInterval(() => setNow(Date.now()), 200);
     return () => window.clearInterval(id);
   }, [status]);
@@ -172,8 +175,13 @@ function TimerPanel() {
       : status === "done"
         ? 0
         : remainingMs;
+  const overtimeMs =
+    status === "done" && finishedAt ? Math.max(0, now - finishedAt) : 0;
 
-  const clock = formatRemaining(remaining, showSeconds);
+  const clock =
+    status === "done"
+      ? formatOvertime(overtimeMs, showSeconds)
+      : formatRemaining(remaining, showSeconds);
 
   return (
     <div className="halo-panel">
@@ -188,12 +196,12 @@ function TimerPanel() {
       </p>
       <p className="halo-big-sub">
         {status === "done"
-          ? t(lang, "done")
+          ? t(lang, "overtime")
           : loop && status === "running"
-            ? t(lang, "looping")
+            ? tRound(lang, Math.max(1, loopRound))
             : `${t(lang, "total")} · ${formatRemaining(durationMs, false)}`}
       </p>
-      <div className="halo-row">
+      <div className="halo-row halo-row-top">
         <Button
           onClick={() => {
             if (status === "running") pause();
@@ -213,6 +221,20 @@ function TimerPanel() {
         </Button>
         <Button variant="secondary" onClick={() => reset()}>
           {t(lang, "reset")}
+        </Button>
+        <Button
+          variant="outline"
+          onClick={() => nudge(-60_000)}
+          disabled={status === "done"}
+        >
+          {t(lang, "minusMinute")}
+        </Button>
+        <Button
+          variant="outline"
+          onClick={() => nudge(60_000)}
+          disabled={status === "done"}
+        >
+          {t(lang, "plusMinute")}
         </Button>
       </div>
       <ToggleRow
@@ -450,6 +472,7 @@ function DisplayPanel() {
   const sound = useHalo((s) => s.sound);
   const loop = useHalo((s) => s.loop);
   const alwaysOnTop = useHalo((s) => s.alwaysOnTop);
+  const clickThrough = useHalo((s) => s.clickThrough);
   const setLang = useHalo((s) => s.setLang);
   const setOs = useHalo((s) => s.setOs);
   const setShowSeconds = useHalo((s) => s.setShowSeconds);
@@ -458,6 +481,7 @@ function DisplayPanel() {
   const setSound = useHalo((s) => s.setSound);
   const setLoop = useHalo((s) => s.setLoop);
   const setAlwaysOnTop = useHalo((s) => s.setAlwaysOnTop);
+  const setClickThrough = useHalo((s) => s.setClickThrough);
   const setFocusMode = useHalo((s) => s.setFocusMode);
   const size = useHalo((s) => s.size);
 
@@ -495,23 +519,27 @@ function DisplayPanel() {
           English
         </button>
       </div>
-      <Label>{t(lang, "desktop")}</Label>
-      <div className="halo-seg">
-        <button
-          type="button"
-          className={cn("halo-seg-btn", os === "mac" && "is-active")}
-          onClick={() => setOs("mac")}
-        >
-          {t(lang, "mac")}
-        </button>
-        <button
-          type="button"
-          className={cn("halo-seg-btn", os === "windows" && "is-active")}
-          onClick={() => setOs("windows")}
-        >
-          {t(lang, "windows")}
-        </button>
-      </div>
+      {isHaloDesktop() ? null : (
+        <>
+          <Label>{t(lang, "desktop")}</Label>
+          <div className="halo-seg">
+            <button
+              type="button"
+              className={cn("halo-seg-btn", os === "mac" && "is-active")}
+              onClick={() => setOs("mac")}
+            >
+              {t(lang, "mac")}
+            </button>
+            <button
+              type="button"
+              className={cn("halo-seg-btn", os === "windows" && "is-active")}
+              onClick={() => setOs("windows")}
+            >
+              {t(lang, "windows")}
+            </button>
+          </div>
+        </>
+      )}
       <ToggleRow
         label={t(lang, "showSeconds")}
         checked={showSeconds}
@@ -545,6 +573,16 @@ function DisplayPanel() {
         checked={alwaysOnTop}
         onCheckedChange={setAlwaysOnTop}
       />
+      {isHaloDesktop() ? (
+        <>
+          <ToggleRow
+            label={t(lang, "clickThrough")}
+            checked={clickThrough}
+            onCheckedChange={setClickThrough}
+          />
+          <p className="halo-hint">{t(lang, "clickThroughHint")}</p>
+        </>
+      ) : null}
       {isHaloDesktop() ? null : (
         <>
           <div className="halo-row halo-row-top">

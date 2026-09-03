@@ -44,7 +44,7 @@ function TickGlyph({ value }: { value: string }) {
     shown.current = value;
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce || value === ":" || from === ":") {
+    if (reduce || value === ":" || value === "+" || from === ":" || from === "+") {
       setOutgoing(null);
       setCurrent(value);
       return;
@@ -57,7 +57,14 @@ function TickGlyph({ value }: { value: string }) {
   }, [value]);
 
   return (
-    <span className={cn("halo-tick", value === ":" && "is-colon")} aria-hidden>
+    <span
+      className={cn(
+        "halo-tick",
+        value === ":" && "is-colon",
+        value === "+" && "is-plus",
+      )}
+      aria-hidden
+    >
       {outgoing ? (
         <>
           <span className="halo-tick-out" aria-hidden>

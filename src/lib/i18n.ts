@@ -54,6 +54,11 @@ export const messages = {
     loop: "循环",
     loopHint: "结束后按设定时长自动再来一轮。",
     looping: "循环中",
+    overtime: "超时",
+    plusMinute: "+1 分钟",
+    minusMinute: "−1 分钟",
+    clickThrough: "鼠标穿透",
+    clickThroughHint: "开启后点击会穿过计时器，方便操作下面的窗口。要拖动或点按钮时先关掉。",
     alwaysOnTop: "始终置顶",
     popOut: "弹出悬浮窗",
     popOutHint: "用画中画把计时器浮在其他窗口之上。",
@@ -61,7 +66,7 @@ export const messages = {
     exitFocus: "退出专注",
     aboutBody:
       "Halo 是一款可完全自定义的悬浮倒计时。把圆环拖到桌面任意位置，选择圆环、胶囊、卡片或只显示时间，并在多款主题之间切换。所有偏好保存在这台设备上。",
-    aboutHint: "空格 暂停或继续  ·  R 重置  ·  S 设置  ·  F 专注  ·  Esc 返回",
+    aboutHint: "空格 暂停或继续  ·  R 重置  ·  + / − 加减一分钟  ·  S 设置  ·  F 专注  ·  Esc 返回",
     pipUnsupported: "当前浏览器不支持弹出悬浮窗，已进入专注模式",
     close: "关闭",
     started: "已开始倒计时",
@@ -126,6 +131,12 @@ export const messages = {
     loop: "Loop",
     loopHint: "Restart from the set duration when time is up.",
     looping: "Looping",
+    overtime: "Overtime",
+    plusMinute: "+1 min",
+    minusMinute: "−1 min",
+    clickThrough: "Click through",
+    clickThroughHint:
+      "Clicks pass through the timer so you can work underneath. Turn it off to drag or use the buttons.",
     alwaysOnTop: "Always on top",
     popOut: "Pop out",
     popOutHint: "Float the timer over other windows with picture-in-picture.",
@@ -133,7 +144,7 @@ export const messages = {
     exitFocus: "Exit focus",
     aboutBody:
       "Halo is a fully customizable floating countdown. Drag the ring anywhere on the desk, switch between a ring, a pill, a card, or time-only, and pick a theme. Preferences stay on this device.",
-    aboutHint: "Space pause/resume  ·  R reset  ·  S settings  ·  F focus  ·  Esc back",
+    aboutHint: "Space pause/resume  ·  R reset  ·  +/− add or subtract a minute  ·  S settings  ·  F focus  ·  Esc back",
     pipUnsupported: "Picture-in-picture isn’t available here — switched to focus mode.",
     close: "Close",
     started: "Countdown started",
@@ -151,4 +162,8 @@ export type MsgKey = keyof typeof messages.zh;
 
 export function t(lang: Lang, key: MsgKey): string {
   return messages[lang][key];
+}
+
+export function tRound(lang: Lang, n: number): string {
+  return lang === "zh" ? `第 ${n} 轮` : `Round ${n}`;
 }

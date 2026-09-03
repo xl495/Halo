@@ -7,8 +7,8 @@ function widgetSize(shape = "ring", size = 236) {
   const padY = 92;
   if (shape === "pill") {
     return {
-      width: Math.round(size * 1.28) + padX,
-      height: Math.max(Math.round(size * 0.4), 72) + padY,
+      width: Math.round(size * 1.32) + padX,
+      height: Math.max(Math.round(size * 0.5), 108) + padY,
     };
   }
   if (shape === "card") {
@@ -49,6 +49,10 @@ export async function installHaloDesktop() {
     setAlwaysOnTop: async (value) => {
       const win = await WebviewWindow.getByLabel("widget");
       await win?.setAlwaysOnTop(value);
+    },
+    setClickThrough: async (value) => {
+      const win = await WebviewWindow.getByLabel("widget");
+      await win?.setIgnoreCursorEvents(value);
     },
     resizeWidget: async (info) => {
       const win = await WebviewWindow.getByLabel("widget");

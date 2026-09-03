@@ -18,6 +18,7 @@ function NativeApp() {
   const loopGeneration = useHalo((s) => s.loopGeneration);
   const hasHydrated = useHalo((s) => s.hasHydrated);
   const alwaysOnTop = useHalo((s) => s.alwaysOnTop);
+  const clickThrough = useHalo((s) => s.clickThrough);
   const shape = useHalo((s) => s.shape);
   const size = useHalo((s) => s.size);
   const start = useHalo((s) => s.start);
@@ -75,6 +76,11 @@ function NativeApp() {
 
   useEffect(() => {
     if (!isHaloDesktop() || view !== "widget") return;
+    void window.haloDesktop?.setClickThrough(clickThrough);
+  }, [clickThrough, view]);
+
+  useEffect(() => {
+    if (!isHaloDesktop() || view !== "widget") return;
     void window.haloDesktop?.resizeWidget({ shape, size });
   }, [shape, size, view]);
 
@@ -91,6 +97,10 @@ function NativeApp() {
         else s.start();
       } else if (e.key === "r" || e.key === "R") {
         reset();
+      } else if (e.key === "=" || e.key === "+") {
+        useHalo.getState().nudge(60_000);
+      } else if (e.key === "-" || e.key === "_") {
+        useHalo.getState().nudge(-60_000);
       } else if (e.key === "s" || e.key === "S") {
         setFocusMode(false);
         if (isHaloDesktop()) void window.haloDesktop?.openSettings();
