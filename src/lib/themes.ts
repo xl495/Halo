@@ -22,6 +22,17 @@ export const THEMES: {
   { id: "moss", zh: "苔原", en: "Moss" },
 ];
 
+export const THEME_TIME: Record<ThemeId, string> = {
+  aurora: "#f3fffb",
+  ice: "#f4fbff",
+  ember: "#fff6f1",
+  ink: "#fafafa",
+  tide: "#f3fbff",
+  moss: "#f4fff4",
+};
+
+export const DEFAULT_OVERTIME = "#ffe4df";
+
 export const SHAPES = ["ring", "pill", "minimal", "card"] as const;
 export type Shape = (typeof SHAPES)[number];
 

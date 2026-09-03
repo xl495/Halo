@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { Pause, Play, RotateCcw, Settings2 } from "lucide-react";
 import { WidgetFace } from "@/components/widget/widget-face";
 import { t, tRound } from "@/lib/i18n";
@@ -21,6 +21,8 @@ export function HaloWidget({
   const shape = useHalo((s) => s.shape);
   const themeId = useHalo((s) => s.themeId);
   const size = useHalo((s) => s.size);
+  const timeColor = useHalo((s) => s.timeColor);
+  const overtimeColor = useHalo((s) => s.overtimeColor);
   const opacity = useHalo((s) => s.opacity);
   const thickness = useHalo((s) => s.thickness);
   const glass = useHalo((s) => s.glass);
@@ -49,9 +51,11 @@ export function HaloWidget({
   const setWidgetPos = useHalo((s) => s.setWidgetPos);
   const setWidgetFocus = useHalo((s) => s.setWidgetFocus);
   const finish = useHalo((s) => s.finish);
+  const desktop = isHaloDesktop();
 
   const [now, setNow] = useState(() => Date.now());
   const [fit, setFit] = useState(size);
+  const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (status !== "running" && status !== "done") return;
@@ -60,12 +64,34 @@ export function HaloWidget({
   }, [status]);
 
   useEffect(() => {
+    if (desktop && !preview) {
+      setFit(forceSize ?? size);
+      return;
+    }
     const apply = () =>
       setFit(Math.min(forceSize ?? size, Math.max(140, window.innerWidth - 40)));
     apply();
     window.addEventListener("resize", apply);
     return () => window.removeEventListener("resize", apply);
-  }, [size, forceSize]);
+  }, [size, forceSize, desktop, preview]);
+
+  useEffect(() => {
+    if (!desktop || preview || embedded) return;
+    const el = rootRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    let last = "";
+    const ro = new ResizeObserver(() => {
+      const rect = el.getBoundingClientRect();
+      const width = Math.ceil(rect.width + 16);
+      const height = Math.ceil(rect.height + 16);
+      const key = `${width}x${height}`;
+      if (key === last) return;
+      last = key;
+      void window.haloDesktop?.resizeTo(width, height);
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [desktop, preview, embedded, shape, size, showLabel, showSeconds]);
 
   const remaining = useMemo(() => {
     if (status === "running" && endsAt) return Math.max(0, endsAt - now);
@@ -106,7 +132,6 @@ export function HaloWidget({
 
   const drag = useDrag(widgetPos, setWidgetPos);
   const z = alwaysOnTop ? 50 : widgetFocus ? 40 : 24;
-  const desktop = isHaloDesktop();
   const [hot, setHot] = useState(false);
 
   useEffect(() => {
@@ -129,6 +154,7 @@ export function HaloWidget({
 
   return (
     <div
+      ref={rootRef}
       className={cn(
         "halo-float",
         !floating && "halo-float-preview",
@@ -140,14 +166,28 @@ export function HaloWidget({
         status === "done" && "is-overtime",
       )}
       style={
-        floating
-          ? {
-              left: `${widgetPos.x * 100}%`,
-              top: `${widgetPos.y * 100}%`,
-              zIndex: z,
-              opacity,
-            }
-          : { opacity }
+        {
+          ...(floating
+            ? {
+                left: `${widgetPos.x * 100}%`,
+                top: `${widgetPos.y * 100}%`,
+                zIndex: z,
+                opacity,
+              }
+            : { opacity }),
+          ...(status === "done"
+            ? overtimeColor
+              ? {
+                  "--halo-time": overtimeColor,
+                  "--halo-ring-from": overtimeColor,
+                  "--halo-ring-to": overtimeColor,
+                  "--halo-label": overtimeColor,
+                }
+              : {}
+            : timeColor
+              ? { "--halo-time": timeColor }
+              : {}),
+        } as CSSProperties
       }
       data-halo-theme={themeId}
       data-halo-glass={glass ? "true" : "false"}

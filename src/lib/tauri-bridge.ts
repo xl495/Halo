@@ -5,22 +5,22 @@ import type { HaloDesktopApi } from "@/lib/desktop";
 import { desktopView } from "@/lib/desktop";
 
 function widgetSize(shape = "ring", size = 236) {
-  const padX = 8;
-  const padY = 44;
+  const padX = 20;
+  const padY = 52;
   if (shape === "pill") {
     return {
-      width: Math.round(size * 1.32) + padX,
-      height: Math.max(Math.round(size * 0.5), 108) + padY,
+      width: Math.round(size * 1.55) + padX,
+      height: Math.max(Math.round(size * 0.52), 116) + padY,
     };
   }
   if (shape === "card") {
     return {
-      width: Math.round(size * 1.12) + padX,
-      height: Math.round(size * 0.78) + padY,
+      width: Math.round(size * 1.18) + padX,
+      height: Math.round(size * 0.82) + padY,
     };
   }
   if (shape === "minimal") {
-    return { width: Math.round(size * 1.15) + padX, height: 72 + padY };
+    return { width: Math.round(size * 1.25) + padX, height: 80 + padY };
   }
   return { width: size + padX, height: size + padY };
 }
@@ -65,6 +65,13 @@ export async function installHaloDesktop() {
       const next = widgetSize(info.shape, info.size);
       await win?.setShadow(false);
       await win?.setSize(new LogicalSize(next.width, next.height));
+    },
+    resizeTo: async (width, height) => {
+      const win = await WebviewWindow.getByLabel("widget");
+      await win?.setShadow(false);
+      await win?.setSize(
+        new LogicalSize(Math.max(120, Math.ceil(width)), Math.max(80, Math.ceil(height))),
+      );
     },
   };
 

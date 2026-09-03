@@ -20,7 +20,7 @@ import { formatOvertime, formatRemaining } from "@/lib/format-time";
 import { t, tRound, type MsgKey } from "@/lib/i18n";
 import { openHaloPip } from "@/lib/pip";
 import { isHaloDesktop } from "@/lib/desktop";
-import { PRESETS, SHAPES, THEMES } from "@/lib/themes";
+import { PRESETS, SHAPES, THEMES, THEME_TIME, DEFAULT_OVERTIME } from "@/lib/themes";
 import { useDrag } from "@/lib/use-drag";
 import { cn } from "@/lib/utils";
 import { useHalo, type SettingsTab } from "@/store/halo";
@@ -375,12 +375,16 @@ function LookPanel() {
   const thickness = useHalo((s) => s.thickness);
   const opacity = useHalo((s) => s.opacity);
   const glass = useHalo((s) => s.glass);
+  const timeColor = useHalo((s) => s.timeColor);
+  const overtimeColor = useHalo((s) => s.overtimeColor);
   const setShape = useHalo((s) => s.setShape);
   const setTheme = useHalo((s) => s.setTheme);
   const setSize = useHalo((s) => s.setSize);
   const setThickness = useHalo((s) => s.setThickness);
   const setOpacity = useHalo((s) => s.setOpacity);
   const setGlass = useHalo((s) => s.setGlass);
+  const setTimeColor = useHalo((s) => s.setTimeColor);
+  const setOvertimeColor = useHalo((s) => s.setOvertimeColor);
 
   return (
     <div className="halo-panel">
@@ -429,6 +433,21 @@ function LookPanel() {
           </button>
         ))}
       </div>
+
+      <ColorRow
+        label={t(lang, "timeColor")}
+        value={timeColor}
+        fallback={THEME_TIME[themeId]}
+        onChange={setTimeColor}
+        resetLabel={t(lang, "followTheme")}
+      />
+      <ColorRow
+        label={t(lang, "overtimeColor")}
+        value={overtimeColor}
+        fallback={DEFAULT_OVERTIME}
+        onChange={setOvertimeColor}
+        resetLabel={t(lang, "followTheme")}
+      />
 
       <div className="halo-slider-row">
         <Label>
@@ -626,6 +645,43 @@ function AboutPanel() {
         {t(lang, "aboutBody")}
       </p>
       <p className="halo-hint">{t(lang, "aboutHint")}</p>
+    </div>
+  );
+}
+
+function ColorRow({
+  label,
+  value,
+  fallback,
+  onChange,
+  resetLabel,
+}: {
+  label: string;
+  value: string;
+  fallback: string;
+  onChange: (color: string) => void;
+  resetLabel: string;
+}) {
+  const hex = /^#[0-9a-fA-F]{6}$/.test(value) ? value : fallback;
+  const custom = hex === value && value.length > 0;
+  return (
+    <div className="halo-color-row">
+      <span>{label}</span>
+      <div className="halo-color-pick">
+        <input
+          type="color"
+          value={hex}
+          aria-label={label}
+          onChange={(e) => onChange(e.target.value)}
+        />
+        <button
+          type="button"
+          className={cn("halo-color-reset", !custom && "is-active")}
+          onClick={() => onChange("")}
+        >
+          {resetLabel}
+        </button>
+      </div>
     </div>
   );
 }

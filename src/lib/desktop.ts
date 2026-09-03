@@ -7,6 +7,7 @@ export type HaloDesktopApi = {
   setClickThrough: (value: boolean) => Promise<void>;
   startDrag: () => Promise<void>;
   resizeWidget: (info: { shape: string; size: number }) => Promise<void>;
+  resizeTo: (width: number, height: number) => Promise<void>;
 };
 
 declare global {

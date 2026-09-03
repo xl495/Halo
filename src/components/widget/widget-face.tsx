@@ -86,7 +86,7 @@ export function WidgetFace({
       <div
         className={cn("halo-pill", glass && "halo-face-glass")}
         style={{
-          width: size * 1.32,
+          width: size * 1.55,
           height: pillH,
         }}
       >
@@ -141,7 +141,7 @@ function timeMaxWidth(
     const inner = size - (thickness + 6) * 2 - 8;
     return inner * 0.84;
   }
-  if (shape === "pill") return size * 1.32 - 64;
+  if (shape === "pill") return Math.max(120, size * 1.55 - 72);
   if (shape === "card") return size * 1.12 - 44;
   return size * 1.05;
 }

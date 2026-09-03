@@ -17,6 +17,8 @@ export interface HaloState {
   shape: Shape;
   themeId: ThemeId;
   size: number;
+  timeColor: string;
+  overtimeColor: string;
   opacity: number;
   thickness: number;
   glass: boolean;
@@ -48,6 +50,8 @@ export interface HaloState {
   setShape: (shape: Shape) => void;
   setTheme: (themeId: ThemeId) => void;
   setSize: (size: number) => void;
+  setTimeColor: (color: string) => void;
+  setOvertimeColor: (color: string) => void;
   setOpacity: (opacity: number) => void;
   setThickness: (thickness: number) => void;
   setGlass: (glass: boolean) => void;
@@ -85,6 +89,8 @@ export const useHalo = create<HaloState>()(
       shape: "ring",
       themeId: "aurora",
       size: 236,
+      timeColor: "",
+      overtimeColor: "",
       opacity: 1,
       thickness: 11,
       glass: false,
@@ -116,6 +122,8 @@ export const useHalo = create<HaloState>()(
       setShape: (shape) => set({ shape }),
       setTheme: (themeId) => set({ themeId }),
       setSize: (size) => set({ size }),
+      setTimeColor: (timeColor) => set({ timeColor }),
+      setOvertimeColor: (overtimeColor) => set({ overtimeColor }),
       setOpacity: (opacity) => set({ opacity }),
       setThickness: (thickness) => set({ thickness }),
       setGlass: (glass) => set({ glass }),
@@ -235,6 +243,8 @@ export const useHalo = create<HaloState>()(
         shape: s.shape,
         themeId: s.themeId,
         size: s.size,
+        timeColor: s.timeColor,
+        overtimeColor: s.overtimeColor,
         opacity: s.opacity,
         thickness: s.thickness,
         glass: s.glass,

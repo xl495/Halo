@@ -515,17 +515,24 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  box-sizing: border-box;
   background: var(--halo-face);
 }
 
 .halo-pill {
   border-radius: 999px;
-  padding: 18px 34px 28px;
+  padding: 18px 36px 26px;
 }
 
 .halo-pill .halo-face {
   gap: 10px;
-  padding: 4px 6px 12px;
+  padding: 4px 4px 10px;
+  overflow: visible;
+}
+
+.halo-pill .halo-time {
+  overflow: visible;
+  max-width: none;
 }
 
 .halo-pill .halo-label {
@@ -978,6 +985,45 @@ html.halo-native:hover .halo-controls {
   justify-content: space-between;
   min-height: 44px;
   font-size: 13px;
+}
+
+.halo-color-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 44px;
+  font-size: 13px;
+}
+
+.halo-color-pick {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.halo-color-pick input[type="color"] {
+  width: 34px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.halo-color-reset {
+  height: 28px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--color-bg-subtle);
+  color: var(--color-fg-muted);
+  font-size: 11px;
+}
+
+.halo-color-reset.is-active {
+  color: var(--color-primary);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--color-primary) 45%, transparent);
 }
 
 .halo-seg {
