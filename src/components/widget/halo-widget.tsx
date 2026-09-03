@@ -86,6 +86,21 @@ export function HaloWidget({
   const drag = useDrag(widgetPos, setWidgetPos);
   const z = alwaysOnTop ? 50 : widgetFocus ? 40 : 24;
   const desktop = isHaloDesktop();
+  const [hot, setHot] = useState(false);
+
+  useEffect(() => {
+    if (!desktop) return;
+    const enter = () => setHot(true);
+    const leave = () => setHot(false);
+    document.addEventListener("mouseenter", enter);
+    document.addEventListener("mouseleave", leave);
+    window.addEventListener("pointerover", enter);
+    return () => {
+      document.removeEventListener("mouseenter", enter);
+      document.removeEventListener("mouseleave", leave);
+      window.removeEventListener("pointerover", enter);
+    };
+  }, [desktop]);
 
   if (pipActive && !preview && !embedded && !desktop) return null;
 
@@ -97,6 +112,7 @@ export function HaloWidget({
         "halo-float",
         !floating && "halo-float-preview",
         desktop && "halo-float-desktop",
+        hot && "is-hot",
         status === "done" && "halo-float-done",
       )}
       style={
@@ -117,6 +133,8 @@ export function HaloWidget({
         setWidgetFocus(true);
         drag.onPointerDown(e);
       }}
+      onPointerEnter={() => setHot(true)}
+      onPointerLeave={() => setHot(false)}
       onPointerMove={floating ? drag.onPointerMove : undefined}
       onPointerUp={floating ? drag.onPointerUp : undefined}
       onPointerCancel={floating ? drag.onPointerUp : undefined}
