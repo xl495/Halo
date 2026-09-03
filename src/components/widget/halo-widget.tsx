@@ -3,6 +3,7 @@ import { Pause, Play, RotateCcw, Settings2 } from "lucide-react";
 import { WidgetFace } from "@/components/widget/widget-face";
 import { t } from "@/lib/i18n";
 import { formatRemaining } from "@/lib/format-time";
+import { isHaloDesktop } from "@/lib/desktop";
 import { useDrag } from "@/lib/use-drag";
 import { cn } from "@/lib/utils";
 import { useHalo } from "@/store/halo";
@@ -84,16 +85,18 @@ export function HaloWidget({
 
   const drag = useDrag(widgetPos, setWidgetPos);
   const z = alwaysOnTop ? 50 : widgetFocus ? 40 : 24;
+  const desktop = isHaloDesktop();
 
-  if (pipActive && !preview && !embedded) return null;
+  if (pipActive && !preview && !embedded && !desktop) return null;
 
-  const floating = !preview && !embedded;
+  const floating = !preview && !embedded && !desktop;
 
   return (
     <div
       className={cn(
         "halo-float",
         !floating && "halo-float-preview",
+        desktop && "halo-float-desktop",
         status === "done" && "halo-float-done",
       )}
       style={
@@ -161,8 +164,9 @@ export function HaloWidget({
             aria-label={t(lang, "settings")}
             onClick={() => {
               setSettingsTab("timer");
-              setSettingsOpen(true);
               useHalo.getState().setFocusMode(false);
+              if (desktop) void window.haloDesktop?.openSettings();
+              else setSettingsOpen(true);
             }}
           >
             <Settings2 />

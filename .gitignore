@@ -1,5 +1,10 @@
 node_modules/
 .project_id
-.github_repo
 .env
 .env.*
+desktop-dist/
+release/
+dist/
+.output/
+*.log
+.DS_Store

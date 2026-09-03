@@ -5,7 +5,7 @@ import { SettingsWindow } from "@/components/settings/settings-window";
 import { HaloWidget } from "@/components/widget/halo-widget";
 import { playChime } from "@/lib/chime";
 import { desktopView, isHaloDesktop } from "@/lib/desktop";
-import { t } from "i18n";
+import { t } from "@/lib/i18n";
 import { useHalo } from "@/store/halo";
 import "./styles.css";
 
@@ -19,8 +19,6 @@ function NativeApp() {
   const shape = useHalo((s) => s.shape);
   const size = useHalo((s) => s.size);
   const start = useHalo((s) => s.start);
-  const pause = useHalo((s) => s.pause);
-  const resume = useHalo((s) => s.resume);
   const reset = useHalo((s) => s.reset);
   const setOs = useHalo((s) => s.setOs);
   const setSettingsOpen = useHalo((s) => s.setSettingsOpen);
@@ -94,7 +92,7 @@ function NativeApp() {
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [pause, resume, reset, start, setSettingsOpen, setFocusMode]);
+  }, [reset, setSettingsOpen, setFocusMode]);
 
   return (
     <>

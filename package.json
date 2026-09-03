@@ -1,8 +1,13 @@
 {
-  "name": "app-builder-workspace",
+  "name": "halo-timer",
+  "productName": "Halo",
+  "version": "1.0.0",
+  "description": "Floating desktop countdown timer",
+  "author": "Halo",
   "private": true,
   "sideEffects": false,
   "type": "module",
+  "main": "electron/main.mjs",
   "overrides": {
     "nf3": "0.3.17"
   },
@@ -18,7 +23,10 @@
     "check:auth": "node scripts/check-auth-invariant.mjs",
     "test": "node --test 'scripts/**/*.test.mjs' && node --experimental-strip-types --test src/lib/app-data/app-data.test.ts src/lib/auth/gate-identity.test.ts src/lib/auth/sign-in-gate.test.ts",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "desktop:ui": "vite build --config vite.desktop.config.ts",
+    "desktop:icon": "node scripts/make-icon.mjs",
+    "desktop:pack": "npm run desktop:ui && electron-builder --publish never"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.4",
@@ -93,5 +101,31 @@
     "typescript": "^5.7.0",
     "typescript-eslint": "^8.56.1",
     "vite": "^8.2.0"
+  },
+  "build": {
+    "appId": "app.halo.timer",
+    "productName": "Halo",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "electron/**/*",
+      "desktop-dist/**/*",
+      "build/icon.png"
+    ],
+    "icon": "build/icon.png",
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": ["dmg", "zip"],
+      "identity": null,
+      "hardenedRuntime": false
+    },
+    "win": {
+      "target": ["nsis", "zip"]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
   }
 }

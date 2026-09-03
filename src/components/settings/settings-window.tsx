@@ -19,6 +19,7 @@ import { playChime } from "@/lib/chime";
 import { formatRemaining } from "@/lib/format-time";
 import { t, type MsgKey } from "@/lib/i18n";
 import { openHaloPip } from "@/lib/pip";
+import { isHaloDesktop } from "@/lib/desktop";
 import { PRESETS, SHAPES, THEMES } from "@/lib/themes";
 import { useDrag } from "@/lib/use-drag";
 import { cn } from "@/lib/utils";
@@ -45,26 +46,36 @@ export function SettingsWindow() {
   const setPos = useHalo((s) => s.setSettingsPos);
   const setWidgetFocus = useHalo((s) => s.setWidgetFocus);
   const drag = useDrag(pos, setPos);
+  const page = isHaloDesktop();
 
-  if (!open || focusMode) return null;
+  if (!page && (!open || focusMode)) return null;
 
   const z = alwaysOnTop && widgetFocus ? 30 : 42;
 
+  function close() {
+    if (page) void window.haloDesktop?.closeSettings();
+    else setOpen(false);
+  }
+
   return (
     <section
-      className="halo-settings"
-      style={{
-        left: `${pos.x * 100}%`,
-        top: `${pos.y * 100}%`,
-        zIndex: z,
-      }}
+      className={cn("halo-settings", page && "halo-settings-page")}
+      style={
+        page
+          ? undefined
+          : {
+              left: `${pos.x * 100}%`,
+              top: `${pos.y * 100}%`,
+              zIndex: z,
+            }
+      }
       onPointerDown={() => setWidgetFocus(false)}
     >
       <header
         className="halo-settings-bar"
-        onPointerDown={drag.onPointerDown}
-        onPointerMove={drag.onPointerMove}
-        onPointerUp={drag.onPointerUp}
+        onPointerDown={page ? undefined : drag.onPointerDown}
+        onPointerMove={page ? undefined : drag.onPointerMove}
+        onPointerUp={page ? undefined : drag.onPointerUp}
       >
         {os === "mac" ? (
           <span className="halo-traffic">
@@ -73,7 +84,7 @@ export function SettingsWindow() {
               className="halo-traffic-btn halo-traffic-close"
               aria-label={t(lang, "close")}
               data-no-drag
-              onClick={() => setOpen(false)}
+              onClick={close}
             />
             <span className="halo-traffic-btn halo-traffic-min" />
             <span className="halo-traffic-btn halo-traffic-max" />
@@ -89,7 +100,7 @@ export function SettingsWindow() {
           className="halo-settings-x"
           aria-label={t(lang, "close")}
           data-no-drag
-          onClick={() => setOpen(false)}
+          onClick={close}
         >
           <X className="size-3.5" />
         </button>
@@ -516,16 +527,20 @@ function DisplayPanel() {
         checked={alwaysOnTop}
         onCheckedChange={setAlwaysOnTop}
       />
-      <div className="halo-row halo-row-top">
-        <Button variant="secondary" onClick={() => setFocusMode(true)}>
-          {t(lang, "focusMode")}
-        </Button>
-        <Button variant="outline" onClick={() => void popOut()}>
-          <PictureInPicture2 />
-          {t(lang, "popOut")}
-        </Button>
-      </div>
-      <p className="halo-hint">{t(lang, "popOutHint")}</p>
+      {isHaloDesktop() ? null : (
+        <>
+          <div className="halo-row halo-row-top">
+            <Button variant="secondary" onClick={() => setFocusMode(true)}>
+              {t(lang, "focusMode")}
+            </Button>
+            <Button variant="outline" onClick={() => void popOut()}>
+              <PictureInPicture2 />
+              {t(lang, "popOut")}
+            </Button>
+          </div>
+          <p className="halo-hint">{t(lang, "popOutHint")}</p>
+        </>
+      )}
     </div>
   );
 }

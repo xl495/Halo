@@ -218,3 +218,9 @@ export const useHalo = create<HaloState>()(
     },
   ),
 );
+
+if (typeof window !== "undefined") {
+  window.addEventListener("storage", (event) => {
+    if (event.key === "halo-widget") useHalo.persist.rehydrate();
+  });
+}

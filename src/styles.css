@@ -1047,6 +1047,53 @@
   }
 }
 
+html.halo-native,
+body.halo-native,
+.halo-native #root {
+  background: transparent;
+  min-height: 100%;
+  overflow: hidden;
+}
+
+html.halo-native-settings,
+body.halo-native-settings {
+  background: var(--color-bg);
+}
+
+.halo-float-desktop {
+  position: relative;
+  left: auto;
+  top: auto;
+  cursor: grab;
+  -webkit-app-region: drag;
+}
+
+.halo-float-desktop [data-no-drag],
+.halo-float-desktop .halo-controls,
+.halo-float-desktop .halo-ctrl {
+  -webkit-app-region: no-drag;
+}
+
+.halo-settings.halo-settings-page {
+  position: relative;
+  left: auto;
+  top: auto;
+  width: 100%;
+  height: 100dvh;
+  max-height: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.halo-settings-page .halo-settings-bar {
+  -webkit-app-region: drag;
+}
+
+.halo-settings-page .halo-settings-x,
+.halo-settings-page [data-no-drag] {
+  -webkit-app-region: no-drag;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .halo-controls,
   .halo-float-done .halo-ring-inner,
