@@ -59,7 +59,7 @@ unsafe fn clear_nsview(
     yes: objc::runtime::BOOL,
     no: objc::runtime::BOOL,
 ) {
-    use objc::runtime::Object;
+    use objc::runtime::{Object, BOOL};
     use objc::{class, msg_send, sel, sel_impl};
     use std::ffi::CString;
 
