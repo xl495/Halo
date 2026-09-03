@@ -15,7 +15,7 @@ export function formatRemaining(ms: number, showSeconds: boolean): string {
 }
 
 export function formatOvertime(ms: number, showSeconds: boolean): string {
-  return `+${formatRemaining(ms, showSeconds)}`;
+  return `-${formatRemaining(ms, showSeconds)}`;
 }
 
 export function formatClock(date: Date): string {
@@ -28,7 +28,7 @@ export function timeEmWidth(text: string): number {
   let w = 0;
   for (const ch of text) {
     if (ch === ":") w += 0.3;
-    else if (ch === "+") w += 0.5;
+    else if (ch === "+" || ch === "-") w += 0.5;
     else w += 0.62;
   }
   return w;

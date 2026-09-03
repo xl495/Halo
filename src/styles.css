@@ -1095,9 +1095,9 @@ html.halo-native,
 body.halo-native,
 .halo-native #root {
   background: transparent !important;
-  min-height: 100%;
+  min-height: 0;
+  height: auto;
   overflow: hidden;
-  color-scheme: only light;
 }
 
 html.halo-native-settings,

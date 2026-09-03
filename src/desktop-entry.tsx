@@ -114,17 +114,19 @@ function NativeApp() {
   return (
     <>
       {view === "settings" ? <SettingsWindow /> : <HaloWidget />}
-      <Toaster
-        theme="dark"
-        position="top-center"
-        toastOptions={{
-          style: {
-            background: "#0e1a18",
-            color: "#e8f2ef",
-            border: "1px solid rgb(255 255 255 / 0.08)",
-          },
-        }}
-      />
+      {view === "settings" ? (
+        <Toaster
+          theme="dark"
+          position="top-center"
+          toastOptions={{
+            style: {
+              background: "#0e1a18",
+              color: "#e8f2ef",
+              border: "1px solid rgb(255 255 255 / 0.08)",
+            },
+          }}
+        />
+      ) : null}
     </>
   );
 }

@@ -44,7 +44,15 @@ function TickGlyph({ value }: { value: string }) {
     shown.current = value;
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce || value === ":" || value === "+" || from === ":" || from === "+") {
+    if (
+      reduce ||
+      value === ":" ||
+      value === "+" ||
+      value === "-" ||
+      from === ":" ||
+      from === "+" ||
+      from === "-"
+    ) {
       setOutgoing(null);
       setCurrent(value);
       return;
@@ -61,7 +69,7 @@ function TickGlyph({ value }: { value: string }) {
       className={cn(
         "halo-tick",
         value === ":" && "is-colon",
-        value === "+" && "is-plus",
+        (value === "+" || value === "-") && "is-plus",
       )}
       aria-hidden
     >
