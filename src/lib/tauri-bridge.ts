@@ -1,4 +1,5 @@
 import { LogicalSize } from "@tauri-apps/api/dpi";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import type { HaloDesktopApi } from "@/lib/desktop";
 
@@ -52,7 +53,11 @@ export async function installHaloDesktop() {
     },
     setClickThrough: async (value) => {
       const win = await WebviewWindow.getByLabel("widget");
-      await win?.setIgnoreCursorEvents(value);
+      await win?.setIgnoreCursorEvents(Boolean(value));
+    },
+    startDrag: async () => {
+      const win = getCurrentWindow();
+      await win.startDragging();
     },
     resizeWidget: async (info) => {
       const win = await WebviewWindow.getByLabel("widget");

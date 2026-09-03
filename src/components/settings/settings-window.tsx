@@ -73,10 +73,18 @@ export function SettingsWindow() {
     >
       <header
         className="halo-settings-bar"
-        onPointerDown={page ? undefined : drag.onPointerDown}
+        onPointerDown={(e) => {
+          if ((e.target as HTMLElement).closest("[data-no-drag]")) return;
+          if (page) {
+            if (e.button !== 0) return;
+            e.preventDefault();
+            void window.haloDesktop?.startDrag();
+            return;
+          }
+          drag.onPointerDown(e);
+        }}
         onPointerMove={page ? undefined : drag.onPointerMove}
         onPointerUp={page ? undefined : drag.onPointerUp}
-        {...(page ? { "data-tauri-drag-region": true } : {})}
       >
         {os === "mac" ? (
           <span className="halo-traffic">

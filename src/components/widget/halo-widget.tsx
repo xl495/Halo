@@ -151,8 +151,14 @@ export function HaloWidget({
       }
       data-halo-theme={themeId}
       data-halo-glass={glass ? "true" : "false"}
-      {...(desktop ? { "data-tauri-drag-region": true } : {})}
       onPointerDown={(e) => {
+        if ((e.target as HTMLElement).closest("[data-no-drag]")) return;
+        if (desktop) {
+          if (e.button !== 0) return;
+          e.preventDefault();
+          void window.haloDesktop?.startDrag();
+          return;
+        }
         if (!floating) return;
         setWidgetFocus(true);
         drag.onPointerDown(e);

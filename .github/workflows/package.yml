@@ -66,8 +66,8 @@ jobs:
           merge-multiple: true
       - uses: softprops/action-gh-release@v2
         with:
-          tag_name: v1.0.5
-          name: Halo 1.0.5
+          tag_name: v1.0.6
+          name: Halo 1.0.6
           body: |
             Halo 悬浮倒计时，Tauri 桌面版（体积比 Electron 小一个数量级）。
 

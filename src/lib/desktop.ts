@@ -5,6 +5,7 @@ export type HaloDesktopApi = {
   closeSettings: () => Promise<void>;
   setAlwaysOnTop: (value: boolean) => Promise<void>;
   setClickThrough: (value: boolean) => Promise<void>;
+  startDrag: () => Promise<void>;
   resizeWidget: (info: { shape: string; size: number }) => Promise<void>;
 };
 

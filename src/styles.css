@@ -1112,13 +1112,16 @@ body.halo-native-settings,
   left: auto;
   top: auto;
   cursor: grab;
-  -webkit-app-region: drag;
+}
+
+.halo-float-desktop:active {
+  cursor: grabbing;
 }
 
 .halo-float-desktop [data-no-drag],
 .halo-float-desktop .halo-controls,
 .halo-float-desktop .halo-ctrl {
-  -webkit-app-region: no-drag;
+  cursor: pointer;
 }
 
 .halo-settings.halo-settings-page {
@@ -1133,12 +1136,16 @@ body.halo-native-settings,
 }
 
 .halo-settings-page .halo-settings-bar {
-  -webkit-app-region: drag;
+  cursor: grab;
+}
+
+.halo-settings-page .halo-settings-bar:active {
+  cursor: grabbing;
 }
 
 .halo-settings-page .halo-settings-x,
 .halo-settings-page [data-no-drag] {
-  -webkit-app-region: no-drag;
+  cursor: pointer;
 }
 
 @media (prefers-reduced-motion: reduce) {

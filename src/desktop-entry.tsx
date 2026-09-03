@@ -75,9 +75,9 @@ function NativeApp() {
   }, [alwaysOnTop]);
 
   useEffect(() => {
-    if (!isHaloDesktop() || view !== "widget") return;
+    if (!isHaloDesktop() || view !== "widget" || !hasHydrated) return;
     void window.haloDesktop?.setClickThrough(clickThrough);
-  }, [clickThrough, view]);
+  }, [clickThrough, view, hasHydrated]);
 
   useEffect(() => {
     if (!isHaloDesktop() || view !== "widget") return;
