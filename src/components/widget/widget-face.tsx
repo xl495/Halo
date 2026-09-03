@@ -163,7 +163,6 @@ function RingFrame({
 }) {
   const uid = useId();
   const gradId = `halo-grad-${uid.replace(/:/g, "")}`;
-  const glowId = `halo-glow-${uid.replace(/:/g, "")}`;
   const inset = 6;
   const cx = size / 2;
   const cy = size / 2;
@@ -188,13 +187,6 @@ function RingFrame({
             <stop offset="0%" stopColor="var(--halo-ring-from)" />
             <stop offset="100%" stopColor="var(--halo-ring-to)" />
           </linearGradient>
-          <filter id={glowId} x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="2.6" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
         </defs>
         <circle
           cx={cx}
@@ -205,7 +197,7 @@ function RingFrame({
           strokeWidth={thickness}
         />
         {showProgress ? (
-          <g filter={`url(#${glowId})`}>
+          <g>
             <circle
               cx={cx}
               cy={cy}
