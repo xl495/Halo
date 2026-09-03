@@ -1,13 +1,30 @@
 <!doctype html>
-<html lang="zh">
+<html lang="zh" class="halo-native">
   <head>
     <meta charset="UTF-8" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
-    <meta name="color-scheme" content="dark" />
     <title>Halo</title>
+    <script>
+      if (location.hash.indexOf("settings") !== -1) {
+        document.documentElement.classList.add("halo-native-settings");
+      }
+    </script>
+    <style>
+      html,
+      body,
+      #root {
+        margin: 0;
+        background: transparent !important;
+      }
+      html.halo-native-settings,
+      html.halo-native-settings body,
+      html.halo-native-settings #root {
+        background: #07110f !important;
+      }
+    </style>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -15,7 +32,7 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Sora:wght@400;500;600;700&display=swap"
     />
   </head>
-  <body>
+  <body class="halo-native">
     <div id="root"></div>
     <script type="module" src="/src/desktop-entry.tsx"></script>
   </body>

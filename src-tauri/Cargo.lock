@@ -1209,12 +1209,13 @@ dependencies = [
 
 [[package]]
 name = "halo"
-version = "1.0.1"
+version = "1.0.3"
 dependencies = [
  "serde",
  "serde_json",
  "tauri",
  "tauri-build",
+ "window-vibrancy",
 ]
 
 [[package]]

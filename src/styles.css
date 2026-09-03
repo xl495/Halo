@@ -1057,14 +1057,17 @@ html.halo-native:hover .halo-controls {
 html.halo-native,
 body.halo-native,
 .halo-native #root {
-  background: transparent;
+  background: transparent !important;
   min-height: 100%;
   overflow: hidden;
+  color-scheme: only light;
 }
 
 html.halo-native-settings,
-body.halo-native-settings {
-  background: var(--color-bg);
+body.halo-native-settings,
+.halo-native-settings #root {
+  background: var(--color-bg) !important;
+  color-scheme: dark;
 }
 
 .halo-float-desktop {

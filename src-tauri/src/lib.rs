@@ -19,11 +19,23 @@ fn show_widget(app: &tauri::AppHandle) {
     }
 }
 
+fn clear_widget_background(app: &tauri::AppHandle) {
+    if let Some(widget) = app.get_webview_window("widget") {
+        let _ = widget.set_background_color(Some(tauri::window::Color(0, 0, 0, 0)));
+        #[cfg(windows)]
+        {
+            let _ = window_vibrancy::apply_acrylic(&widget, Some((0, 0, 0, 0)))
+                .or_else(|_| window_vibrancy::apply_blur(&widget, Some((0, 0, 0, 0))));
+        }
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .setup(|app| {
             let handle = app.handle();
+            clear_widget_background(handle);
             let settings_item = MenuItem::with_id(handle, "settings", "设置", true, None::<&str>)?;
             let show_item = MenuItem::with_id(handle, "show", "显示计时器", true, None::<&str>)?;
             let quit_item = MenuItem::with_id(handle, "quit", "退出", true, None::<&str>)?;
