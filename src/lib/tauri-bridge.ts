@@ -4,8 +4,8 @@ import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import type { HaloDesktopApi } from "@/lib/desktop";
 
 function widgetSize(shape = "ring", size = 236) {
-  const padX = 48;
-  const padY = 92;
+  const padX = 28;
+  const padY = 56;
   if (shape === "pill") {
     return {
       width: Math.round(size * 1.32) + padX,
@@ -19,7 +19,7 @@ function widgetSize(shape = "ring", size = 236) {
     };
   }
   if (shape === "minimal") {
-    return { width: Math.round(size * 1.2) + padX, height: 140 + padY };
+    return { width: Math.round(size * 1.15) + padX, height: 88 + padY };
   }
   return { width: size + padX, height: size + padY };
 }

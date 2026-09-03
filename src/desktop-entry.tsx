@@ -36,6 +36,14 @@ function NativeApp() {
   }, [view]);
 
   useEffect(() => {
+    function blockMenu(e: Event) {
+      e.preventDefault();
+    }
+    document.addEventListener("contextmenu", blockMenu);
+    return () => document.removeEventListener("contextmenu", blockMenu);
+  }, []);
+
+  useEffect(() => {
     const platform = window.haloDesktop?.platform;
     if (platform === "darwin") setOs("mac");
     else if (platform === "win32") setOs("windows");

@@ -11,6 +11,9 @@
       if (location.hash.indexOf("settings") !== -1) {
         document.documentElement.classList.add("halo-native-settings");
       }
+      document.addEventListener("contextmenu", function (e) {
+        e.preventDefault();
+      });
     </script>
     <style>
       html,

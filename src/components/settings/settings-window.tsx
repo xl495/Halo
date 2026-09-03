@@ -104,15 +104,19 @@ export function SettingsWindow() {
           </span>
         )}
         <span className="halo-settings-title">{t(lang, "settings")}</span>
-        <button
-          type="button"
-          className="halo-settings-x"
-          aria-label={t(lang, "close")}
-          data-no-drag
-          onClick={close}
-        >
-          <X className="size-3.5" />
-        </button>
+        {os === "mac" ? (
+          <span className="halo-settings-x" aria-hidden />
+        ) : (
+          <button
+            type="button"
+            className="halo-settings-x"
+            aria-label={t(lang, "close")}
+            data-no-drag
+            onClick={close}
+          >
+            <X className="size-3.5" />
+          </button>
+        )}
       </header>
       <div className="halo-settings-body">
         <nav className="halo-settings-nav" aria-label={t(lang, "settings")}>

@@ -520,7 +520,10 @@
   justify-content: center;
   overflow: hidden;
   background: var(--halo-face);
-  box-shadow: var(--shadow-window);
+  box-shadow: none;
+  filter:
+    drop-shadow(0 12px 24px rgb(0 0 0 / 0.45))
+    drop-shadow(0 0 16px var(--halo-glow));
 }
 
 .halo-pill {
@@ -1095,9 +1098,16 @@ html.halo-native,
 body.halo-native,
 .halo-native #root {
   background: transparent !important;
-  min-height: 0;
-  height: auto;
+  min-height: 0 !important;
+  height: auto !important;
   overflow: hidden;
+}
+
+html.halo-native:not(.halo-native-settings),
+body.halo-native:not(.halo-native-settings),
+.halo-native:not(.halo-native-settings) #root {
+  width: fit-content;
+  max-width: 100%;
 }
 
 html.halo-native-settings,
@@ -1112,6 +1122,7 @@ body.halo-native-settings,
   left: auto;
   top: auto;
   cursor: grab;
+  width: fit-content;
 }
 
 .halo-float-desktop:active {
