@@ -28,6 +28,7 @@ export function HaloWidget({
   const showLabel = useHalo((s) => s.showLabel);
   const showProgress = useHalo((s) => s.showProgress);
   const customLabel = useHalo((s) => s.label);
+  const loop = useHalo((s) => s.loop);
   const status = useHalo((s) => s.status);
   const durationMs = useHalo((s) => s.durationMs);
   const remainingMs = useHalo((s) => s.remainingMs);
@@ -80,7 +81,13 @@ export function HaloWidget({
     customLabel.trim() ||
     t(
       lang,
-      status === "done" ? "done" : status === "paused" ? "paused" : "counting",
+      status === "done"
+        ? "done"
+        : status === "paused"
+          ? "paused"
+          : loop
+            ? "looping"
+            : "counting",
     );
 
   const drag = useDrag(widgetPos, setWidgetPos);

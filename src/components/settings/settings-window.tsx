@@ -145,7 +145,9 @@ function TimerPanel() {
   const endsAt = useHalo((s) => s.endsAt);
   const showSeconds = useHalo((s) => s.showSeconds);
   const customLabel = useHalo((s) => s.label);
+  const loop = useHalo((s) => s.loop);
   const setLabel = useHalo((s) => s.setLabel);
+  const setLoop = useHalo((s) => s.setLoop);
   const start = useHalo((s) => s.start);
   const pause = useHalo((s) => s.pause);
   const resume = useHalo((s) => s.resume);
@@ -187,7 +189,9 @@ function TimerPanel() {
       <p className="halo-big-sub">
         {status === "done"
           ? t(lang, "done")
-          : `${t(lang, "total")} · ${formatRemaining(durationMs, false)}`}
+          : loop && status === "running"
+            ? t(lang, "looping")
+            : `${t(lang, "total")} · ${formatRemaining(durationMs, false)}`}
       </p>
       <div className="halo-row">
         <Button
@@ -211,6 +215,12 @@ function TimerPanel() {
           {t(lang, "reset")}
         </Button>
       </div>
+      <ToggleRow
+        label={t(lang, "loop")}
+        checked={loop}
+        onCheckedChange={setLoop}
+      />
+      <p className="halo-hint">{t(lang, "loopHint")}</p>
 
       <Label>{t(lang, "eventName")}</Label>
       <Input
@@ -438,6 +448,7 @@ function DisplayPanel() {
   const showLabel = useHalo((s) => s.showLabel);
   const showProgress = useHalo((s) => s.showProgress);
   const sound = useHalo((s) => s.sound);
+  const loop = useHalo((s) => s.loop);
   const alwaysOnTop = useHalo((s) => s.alwaysOnTop);
   const setLang = useHalo((s) => s.setLang);
   const setOs = useHalo((s) => s.setOs);
@@ -445,6 +456,7 @@ function DisplayPanel() {
   const setShowLabel = useHalo((s) => s.setShowLabel);
   const setShowProgress = useHalo((s) => s.setShowProgress);
   const setSound = useHalo((s) => s.setSound);
+  const setLoop = useHalo((s) => s.setLoop);
   const setAlwaysOnTop = useHalo((s) => s.setAlwaysOnTop);
   const setFocusMode = useHalo((s) => s.setFocusMode);
   const size = useHalo((s) => s.size);
@@ -522,6 +534,11 @@ function DisplayPanel() {
           setSound(v);
           if (v) playChime();
         }}
+      />
+      <ToggleRow
+        label={t(lang, "loop")}
+        checked={loop}
+        onCheckedChange={setLoop}
       />
       <ToggleRow
         label={t(lang, "alwaysOnTop")}

@@ -1,7 +1,7 @@
 {
   "name": "halo-timer",
   "productName": "Halo",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Floating desktop countdown timer",
   "author": "Halo",
   "private": true,

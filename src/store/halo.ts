@@ -25,6 +25,7 @@ export interface HaloState {
   showProgress: boolean;
   label: string;
   sound: boolean;
+  loop: boolean;
   alwaysOnTop: boolean;
   settingsOpen: boolean;
   settingsTab: SettingsTab;
@@ -33,6 +34,7 @@ export interface HaloState {
   remainingMs: number;
   endsAt: number | null;
   status: Status;
+  loopGeneration: number;
   widgetPos: { x: number; y: number };
   settingsPos: { x: number; y: number };
   widgetFocus: boolean;
@@ -51,6 +53,7 @@ export interface HaloState {
   setShowProgress: (v: boolean) => void;
   setLabel: (label: string) => void;
   setSound: (v: boolean) => void;
+  setLoop: (v: boolean) => void;
   setAlwaysOnTop: (v: boolean) => void;
   setSettingsOpen: (v: boolean) => void;
   setSettingsTab: (tab: SettingsTab) => void;
@@ -85,6 +88,7 @@ export const useHalo = create<HaloState>()(
       showProgress: true,
       label: "",
       sound: true,
+      loop: false,
       alwaysOnTop: true,
       settingsOpen: true,
       settingsTab: "timer",
@@ -93,6 +97,7 @@ export const useHalo = create<HaloState>()(
       remainingMs: DEFAULT_REMAINING,
       endsAt: null,
       status: "idle",
+      loopGeneration: 0,
       widgetPos: { x: 0.07, y: 0.2 },
       settingsPos: { x: 0.48, y: 0.055 },
       widgetFocus: false,
@@ -111,6 +116,7 @@ export const useHalo = create<HaloState>()(
       setShowProgress: (showProgress) => set({ showProgress }),
       setLabel: (label) => set({ label }),
       setSound: (sound) => set({ sound }),
+      setLoop: (loop) => set({ loop }),
       setAlwaysOnTop: (alwaysOnTop) => set({ alwaysOnTop }),
       setSettingsOpen: (settingsOpen) => set({ settingsOpen }),
       setSettingsTab: (settingsTab) => set({ settingsTab }),
@@ -155,7 +161,18 @@ export const useHalo = create<HaloState>()(
         });
       },
       finish: () => {
-        if (get().status === "done") return;
+        const s = get();
+        if (s.status !== "running") return;
+        if (s.loop) {
+          const ms = Math.max(1000, s.durationMs);
+          set({
+            remainingMs: ms,
+            endsAt: Date.now() + ms,
+            status: "running",
+            loopGeneration: s.loopGeneration + 1,
+          });
+          return;
+        }
         set({ remainingMs: 0, endsAt: null, status: "done" });
       },
       again: () => {
@@ -189,6 +206,7 @@ export const useHalo = create<HaloState>()(
         showProgress: s.showProgress,
         label: s.label,
         sound: s.sound,
+        loop: s.loop,
         alwaysOnTop: s.alwaysOnTop,
         settingsOpen: s.settingsOpen,
         settingsTab: s.settingsTab,
@@ -206,9 +224,14 @@ export const useHalo = create<HaloState>()(
             state.endsAt &&
             state.endsAt <= Date.now()
           ) {
-            state.status = "done";
-            state.remainingMs = 0;
-            state.endsAt = null;
+            if (state.loop) {
+              state.remainingMs = state.durationMs;
+              state.endsAt = Date.now() + state.durationMs;
+            } else {
+              state.status = "done";
+              state.remainingMs = 0;
+              state.endsAt = null;
+            }
           }
           state.hasHydrated = true;
         } else {

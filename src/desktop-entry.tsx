@@ -15,6 +15,7 @@ function NativeApp() {
   const lang = useHalo((s) => s.lang);
   const status = useHalo((s) => s.status);
   const sound = useHalo((s) => s.sound);
+  const loopGeneration = useHalo((s) => s.loopGeneration);
   const hasHydrated = useHalo((s) => s.hasHydrated);
   const alwaysOnTop = useHalo((s) => s.alwaysOnTop);
   const shape = useHalo((s) => s.shape);
@@ -61,6 +62,11 @@ function NativeApp() {
     if (sound) playChime();
     toast(t(lang, "timeUp"));
   }, [status, sound, lang]);
+
+  useEffect(() => {
+    if (loopGeneration < 1) return;
+    if (useHalo.getState().sound) playChime();
+  }, [loopGeneration]);
 
   useEffect(() => {
     if (!isHaloDesktop()) return;

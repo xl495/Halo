@@ -16,6 +16,7 @@ export function DesktopShell() {
   const focusMode = useHalo((s) => s.focusMode);
   const status = useHalo((s) => s.status);
   const sound = useHalo((s) => s.sound);
+  const loopGeneration = useHalo((s) => s.loopGeneration);
   const hasHydrated = useHalo((s) => s.hasHydrated);
   const start = useHalo((s) => s.start);
   const pause = useHalo((s) => s.pause);
@@ -59,6 +60,11 @@ export function DesktopShell() {
     if (sound) playChime();
     toast(t(lang, "timeUp"));
   }, [status, sound, lang]);
+
+  useEffect(() => {
+    if (loopGeneration < 1) return;
+    if (useHalo.getState().sound) playChime();
+  }, [loopGeneration]);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
